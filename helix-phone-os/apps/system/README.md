@@ -6,6 +6,7 @@ Lightweight, policy-aware system apps shipped with Helix Phone OS.
 - **Helix Settings**: policy-aware settings surface; hides disallowed toggles; exposes policy version/state.
 - **Approvals UI**: prompts for cross-domain actions and remote admin requests; records decisions.
 - **Attestation/Audit Viewer**: shows device/boot/policy status and recent audit events.
+- **Network Status UI**: read-only indicator of per-domain egress (Direct/VPN/Tor) and blocklist status.
 
 ## Guidelines
 - Keep app permissions minimal; rely on Policy Engine and Domain Broker for enforcement.

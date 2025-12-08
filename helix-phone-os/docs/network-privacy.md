@@ -23,6 +23,6 @@ Plan for built-in privacy networking: Helix VPN and optional Tor routing with tr
 - Local cache with rollback protection; audit when lists update or are overridden by policy.
 
 ## To do
-- Define AIDL between NPS and Policy Engine for per-domain routing directives.
-- Add blocklist update source and signature format.
-- Implement health checks for VPN/Tor daemons and fail-closed logic.
+- Define AIDL between NPS and Policy Engine for per-domain routing directives. (INetPrivacy stub exists)
+- Add blocklist update source and signature format. (sources.json stub; BlocklistManager hash check stub)
+- Implement health checks for VPN/Tor daemons and fail-closed logic. (hooks in NetPrivacyService)

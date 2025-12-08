@@ -21,5 +21,6 @@ Manages per-domain outbound routing (Direct / Helix VPN / Tor) and tracker block
 
 ## To do
 - Define egress mode enum AIDL and INetPrivacy interface.
-- Add blocklist update mechanism with signature verification.
-- Integrate with system firewall/iptables to enforce fail-closed semantics.
+- Add blocklist update mechanism with signature verification. (stub: `BlocklistManager`)
+- Integrate with system firewall/iptables to enforce fail-closed semantics. (stub hooks in `NetPrivacyService`)
+- Wire to Policy Engine (read required mode per domain) and expose compliance to System UI.
