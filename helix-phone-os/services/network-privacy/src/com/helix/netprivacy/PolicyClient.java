@@ -20,8 +20,9 @@ final class PolicyClient {
         try {
             ensure();
             if (policy == null) return defaultMode;
-            // Reuse DomainState to derive network requirement once implemented; default to VPN.
-            return defaultMode;
+            // TODO: extend DomainState with explicit egress mode once policy is implemented.
+            // For now, derive simple defaults: secure -> TOR, others -> VPN.
+            return domainId == Domains.SECURE ? EgressModes.TOR : EgressModes.VPN;
         } catch (Exception e) {
             Log.w(TAG, "Policy query failed, defaulting", e);
             return defaultMode;

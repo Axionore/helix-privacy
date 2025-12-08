@@ -19,6 +19,7 @@ final class BlocklistManager {
     static final String DEFAULT_SOURCE = "https://blocklists.example/helix-dns.txt";
     // Replace with real pinned key.
     private static final String PINNED_PUBKEY_B64 = "REPLACE_WITH_BASE64_X509_PUBKEY";
+    private static final String CACHE_PATH = "/data/misc/helix/blocklists/helix-dns.txt";
 
     String currentVersionHash = "";
 
@@ -43,7 +44,7 @@ final class BlocklistManager {
         // Optional: verify signature if provided (stubbed).
         // verifySignature(data, signatureBytes);
         currentVersionHash = hash;
-        // TODO: persist blocklist to disk and notify iptables/dns layer.
+        persist(data);
         return hash;
     }
 
@@ -56,6 +57,16 @@ final class BlocklistManager {
         sig.initVerify(key);
         sig.update(data);
         return sig.verify(signature);
+    }
+
+    private void persist(byte[] data) {
+        try {
+            java.nio.file.Files.createDirectories(java.nio.file.Paths.get("/data/misc/helix/blocklists"));
+            java.nio.file.Files.write(java.nio.file.Paths.get(CACHE_PATH), data);
+        } catch (Exception e) {
+            // Best effort persistence; log and continue.
+            android.util.Log.w("HelixBlocklist", "Persist blocklist failed", e);
+        }
     }
 
     private static String sha256Hex(byte[] data) throws Exception {

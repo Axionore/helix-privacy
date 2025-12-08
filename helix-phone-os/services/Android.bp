@@ -36,3 +36,19 @@ android_app {
     privileged: true,
     static_libs: ["com.helix.netprivacy"],
 }
+
+android_app {
+    name: "HelixBlockchain",
+    manifest: "blockchain/AndroidManifest.xml",
+    srcs: ["blockchain/src/**/*.java"],
+    platform_apis: true,
+    privileged: true,
+}
+
+android_app {
+    name: "HelixMessenger",
+    manifest: "apps/system/messaging/AndroidManifest.xml",
+    srcs: ["apps/system/messaging/src/**/*.java"],
+    platform_apis: true,
+    privileged: true,
+}

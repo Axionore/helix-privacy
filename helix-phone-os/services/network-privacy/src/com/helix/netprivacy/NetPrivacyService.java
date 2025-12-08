@@ -71,7 +71,7 @@ public class NetPrivacyService extends Service {
 
     private void hydrateBlocklists() {
         try {
-            blocklists.fetchAndVerify(BlocklistManager.DEFAULT_SOURCE, "");
+            blocklists.fetchAndVerify(BlocklistManager.DEFAULT_SOURCE, ""); // TODO: expected hash + signature
         } catch (Exception e) {
             Log.w(TAG, "Blocklist fetch failed", e);
         }
