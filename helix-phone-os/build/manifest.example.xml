@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+    <!-- Remotes -->
+    <remote name="aosp" fetch="https://android.googlesource.com/" review="android-review.googlesource.com"/>
+    <remote name="helix" fetch="https://github.com/Axionore/"/>
+
+    <!-- Default -->
+    <default revision="android-14.0.0_r0" remote="aosp" sync-j="8"/>
+
+    <!-- Core AOSP -->
+    <project path="platform/build" name="platform/build"/>
+    <project path="platform/frameworks/base" name="platform/frameworks/base"/>
+    <project path="platform/frameworks/native" name="platform/frameworks/native"/>
+    <project path="platform/system/core" name="platform/system/core"/>
+    <project path="platform/packages/apps/Settings" name="platform/packages/apps/Settings"/>
+    <project path="platform/packages/apps/SystemUI" name="platform/packages/apps/SystemUI"/>
+
+    <!-- Device/example targets (replace with actual codenames) -->
+    <!-- <project path="device/google/panther" name="device/google/panther"/> -->
+    <!-- <project path="device/google/raven" name="device/google/raven"/> -->
+
+    <!-- Helix additions -->
+    <project path="helix/services/policy-engine" name="helix-phone-os-services-policy-engine" remote="helix" revision="main"/>
+    <project path="helix/services/domain-broker" name="helix-phone-os-services-domain-broker" remote="helix" revision="main"/>
+    <project path="helix/services/bridge-agent" name="helix-phone-os-services-bridge-agent" remote="helix" revision="main"/>
+    <project path="helix/apps/system" name="helix-phone-os-apps-system" remote="helix" revision="main"/>
+    <project path="helix/docs" name="helix-phone-os-docs" remote="helix" revision="main"/>
+</manifest>

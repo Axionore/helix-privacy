@@ -100,3 +100,15 @@ sdk
 system
 tools
 vendor
+
+# Re-allow helix-phone-os tracked sources overriding legacy ignores above
+!helix-phone-os/
+helix-phone-os/*
+!helix-phone-os/build/
+!helix-phone-os/build/**
+!helix-phone-os/docs/
+!helix-phone-os/docs/**
+!helix-phone-os/services/
+!helix-phone-os/services/**
+!helix-phone-os/apps/
+!helix-phone-os/apps/**
