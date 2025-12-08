@@ -13,3 +13,7 @@ helix_print_config() {
 }
 
 add_lunch_combo helix_emulator-userdebug
+add_lunch_combo helix_panther-user
+add_lunch_combo helix_panther-userdebug
+add_lunch_combo helix_shiba-user
+add_lunch_combo helix_shiba-userdebug
