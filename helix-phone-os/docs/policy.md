@@ -13,10 +13,15 @@ Defines how domains are described, enforced, and synchronized with desktop via t
 - `signing_key_id`: fleet admin key identifier.
 - `domains`: per-domain defaults:
   - `apps_allowed`, `apps_blocked`
-  - `network`: allowed hosts/categories; VPN requirement; DNS profile.
+  - `network`: allowed hosts/categories; VPN requirement; DNS profile; tracker blocklists; Tor requirement allowed on secure domain.
   - `storage`: backup allowed? external storage? encryption profile.
   - `clipboard` / `usb`: allow/deny/confirm rules and logging.
 - `cross_domain_rules`: allowlist of source→dest actions with prompts/logging.
+- `network_privacy`: global controls:
+  - `vpn`: require Helix VPN for personal/business; disallow disabling if enforced.
+  - `tor`: optional per-domain egress via Tor (likely secure domain only); allowlist for services that must bypass.
+  - `tracker_blocklists`: versions and sources for DNS/HTTP blocking; policy controls updates and exceptions.
+  - `telemetry_block`: deny known analytics endpoints; require explicit allowlist for any telemetry.
 - `bridge`: allowed remote actions, rate limits, approval requirements.
 - `auditing`: log destinations, retention, sealing parameters.
 

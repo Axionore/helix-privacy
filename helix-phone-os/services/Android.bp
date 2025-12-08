@@ -1,2 +1,20 @@
 // Placeholder blueprint for Helix Phone OS services.
 // Add actual java_library/system_ext modules when implementations are added.
+
+aidl_interface {
+    name: "com.helix.policy",
+    srcs: ["policy-engine/aidl/**/*.aidl"],
+    unstable: true,
+}
+
+aidl_interface {
+    name: "com.helix.domainbroker",
+    srcs: ["domain-broker/aidl/**/*.aidl"],
+    unstable: true,
+}
+
+aidl_interface {
+    name: "com.helix.netprivacy",
+    srcs: ["network-privacy/aidl/**/*.aidl"],
+    unstable: true,
+}

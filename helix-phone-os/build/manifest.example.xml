@@ -27,6 +27,7 @@
     <!-- Helix additions -->
     <project path="helix/services/policy-engine" name="helix-phone-os-services-policy-engine" remote="helix" revision="main"/>
     <project path="helix/services/domain-broker" name="helix-phone-os-services-domain-broker" remote="helix" revision="main"/>
+    <project path="helix/services/network-privacy" name="helix-phone-os-services-network-privacy" remote="helix" revision="main"/>
     <project path="helix/services/bridge-agent" name="helix-phone-os-services-bridge-agent" remote="helix" revision="main"/>
     <project path="helix/apps/system" name="helix-phone-os-apps-system" remote="helix" revision="main"/>
     <project path="helix/docs" name="helix-phone-os-docs" remote="helix" revision="main"/>
