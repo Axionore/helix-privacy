@@ -4,6 +4,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.Objects;
 
 /**
@@ -13,6 +17,8 @@ import java.util.Objects;
  */
 final class BlocklistManager {
     static final String DEFAULT_SOURCE = "https://blocklists.example/helix-dns.txt";
+    // Replace with real pinned key.
+    private static final String PINNED_PUBKEY_B64 = "REPLACE_WITH_BASE64_X509_PUBKEY";
 
     String currentVersionHash = "";
 
@@ -34,9 +40,22 @@ final class BlocklistManager {
         if (!expectedHash.isEmpty() && !hash.equalsIgnoreCase(expectedHash)) {
             throw new SecurityException("Blocklist hash mismatch");
         }
+        // Optional: verify signature if provided (stubbed).
+        // verifySignature(data, signatureBytes);
         currentVersionHash = hash;
         // TODO: persist blocklist to disk and notify iptables/dns layer.
         return hash;
+    }
+
+    boolean verifySignature(byte[] data, byte[] signature) throws Exception {
+        if (signature == null || signature.length == 0) return false;
+        byte[] pub = Base64.getDecoder().decode(PINNED_PUBKEY_B64);
+        PublicKey key = java.security.KeyFactory.getInstance("RSA")
+                .generatePublic(new X509EncodedKeySpec(pub));
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initVerify(key);
+        sig.update(data);
+        return sig.verify(signature);
     }
 
     private static String sha256Hex(byte[] data) throws Exception {

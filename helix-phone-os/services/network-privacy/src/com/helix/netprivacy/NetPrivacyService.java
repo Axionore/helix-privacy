@@ -19,16 +19,20 @@ public class NetPrivacyService extends Service {
 
     // Placeholder state; real implementation should be per-domain.
     private final BlocklistManager blocklists = new BlocklistManager();
+    private final FirewallEnforcer firewall = new FirewallEnforcer();
+    private final PolicyClient policyClient = new PolicyClient();
+    private final VpnController vpn = new VpnController();
+    private final TorController tor = new TorController();
     private boolean vpnHealthy = false;
     private boolean torHealthy = false;
 
     private final INetPrivacy.Stub binder = new INetPrivacy.Stub() {
         @Override
         public EgressMode getDomainEgressMode(int domainId) {
-            // TODO: consult policy engine for required mode.
+            int required = policyClient.getRequiredMode(domainId, /*defaultMode=*/EgressModes.VPN);
             EgressMode mode = new EgressMode();
-            mode.mode = 1; // default to VPN
-            mode.reason = "default VPN enforced";
+            mode.mode = required;
+            mode.reason = required == EgressModes.TOR ? "Tor required" : "VPN required";
             return mode;
         }
 
@@ -39,7 +43,7 @@ public class NetPrivacyService extends Service {
 
         @Override
         public boolean isCompliant() {
-            // Fail closed if VPN is required but not healthy; extend for Tor.
+            // Fail closed if VPN/Tor is required but not healthy.
             return vpnHealthy || torHealthy;
         }
     };
@@ -52,20 +56,24 @@ public class NetPrivacyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "NetPrivacyService start requested");
-        // TODO: start/monitor VPN and Tor daemons; hydrate blocklists.
+        hydrateBlocklists();
+        ensurePaths();
         return START_STICKY;
     }
 
     // Stub hooks for daemon lifecycle and enforcement.
-    private void ensureVpn() {
-        // TODO: start/monitor Helix VPN daemon; set vpnHealthy accordingly.
+    private void ensurePaths() {
+        vpnHealthy = vpn.ensure();
+        torHealthy = tor.ensure();
+        boolean compliant = vpnHealthy || torHealthy;
+        firewall.enforceDropAll(!compliant);
     }
 
-    private void ensureTor() {
-        // TODO: start/monitor Tor daemon for secure domain; set torHealthy accordingly.
-    }
-
-    private void applyFirewallFailClosed() {
-        // TODO: apply iptables/ebpf rules to drop traffic when required path is down.
+    private void hydrateBlocklists() {
+        try {
+            blocklists.fetchAndVerify(BlocklistManager.DEFAULT_SOURCE, "");
+        } catch (Exception e) {
+            Log.w(TAG, "Blocklist fetch failed", e);
+        }
     }
 }

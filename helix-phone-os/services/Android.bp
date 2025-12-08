@@ -18,3 +18,21 @@ aidl_interface {
     srcs: ["network-privacy/aidl/**/*.aidl"],
     unstable: true,
 }
+
+android_app {
+    name: "HelixNetPrivacy",
+    manifest: "network-privacy/AndroidManifest.xml",
+    srcs: ["network-privacy/src/**/*.java"],
+    platform_apis: true,
+    privileged: true,
+    static_libs: ["com.helix.netprivacy"],
+}
+
+android_app {
+    name: "HelixNetStatus",
+    manifest: "apps/system/netstatus/AndroidManifest.xml",
+    srcs: ["apps/system/netstatus/src/**/*.java"],
+    platform_apis: true,
+    privileged: true,
+    static_libs: ["com.helix.netprivacy"],
+}
