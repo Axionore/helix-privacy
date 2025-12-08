@@ -8,6 +8,8 @@ Phone-focused view of the Helix stack on AOSP 14/15 with domain separation and t
 - **Bridge Agent (phone)**: maintains the mutually authenticated channel to the desktop bridge, exchanges provenance-tagged messages, and handles remote actions (e.g., lock business domain).
 - **Network Privacy Service**: enforces per-domain outbound rules, routes traffic through Helix VPN or Tor, and blocks trackers by policy/allowlist.
 - **System Apps**: Helix Settings, Attestation UI, Approvals UI; kept minimal and tied to policy surfaces.
+- **Helix Messenger**: default E2EE messaging app with minimal metadata and optional ledger anchoring for delivery receipts.
+- **Blockchain Anchoring Service**: batches hashes of receipts/audit checkpoints to a ledger when policy allows.
 - **Update Pipeline**: verified boot, AVB/rollback counters, signed OTAs; attest policy/bridge keys at boot.
 
 ## Data paths (phone)

@@ -22,6 +22,8 @@ Defines how domains are described, enforced, and synchronized with desktop via t
   - `tor`: optional per-domain egress via Tor (likely secure domain only); allowlist for services that must bypass.
   - `tracker_blocklists`: versions and sources for DNS/HTTP blocking; policy controls updates and exceptions.
   - `telemetry_block`: deny known analytics endpoints; require explicit allowlist for any telemetry.
+- `messaging`: E2EE required; ledger anchoring allowed/required?; allowed endpoints for push/relay.
+- `blockchain_anchoring`: per-domain settings for anchoring receipt/audit hashes; endpoint selection (public/consortium); batching parameters.
 - `bridge`: allowed remote actions, rate limits, approval requirements.
 - `auditing`: log destinations, retention, sealing parameters.
 
