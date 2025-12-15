@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import android.content.Intent;
 
 import com.helix.netprivacy.EgressMode;
 import com.helix.netprivacy.INetPrivacy;
@@ -19,17 +20,20 @@ public class NetPrivacyService extends Service {
 
     // Placeholder state; real implementation should be per-domain.
     private final BlocklistManager blocklists = new BlocklistManager();
+    private final BlocklistConfig blocklistConfig = new BlocklistConfig();
     private final FirewallEnforcer firewall = new FirewallEnforcer();
     private final PolicyClient policyClient = new PolicyClient();
     private final VpnController vpn = new VpnController();
     private final TorController tor = new TorController();
     private boolean vpnHealthy = false;
     private boolean torHealthy = false;
+    private int[] domainModes = new int[]{EgressModes.VPN, EgressModes.VPN, EgressModes.TOR};
 
     private final INetPrivacy.Stub binder = new INetPrivacy.Stub() {
         @Override
         public EgressMode getDomainEgressMode(int domainId) {
-            int required = policyClient.getRequiredMode(domainId, /*defaultMode=*/EgressModes.VPN);
+            int required = policyClient.getRequiredMode(domainId, domainModes[Math.max(0, Math.min(domainId, domainModes.length - 1))]);
+            domainModes[Math.max(0, Math.min(domainId, domainModes.length - 1))] = required;
             EgressMode mode = new EgressMode();
             mode.mode = required;
             mode.reason = required == EgressModes.TOR ? "Tor required" : "VPN required";
@@ -67,11 +71,13 @@ public class NetPrivacyService extends Service {
         torHealthy = tor.ensure();
         boolean compliant = vpnHealthy || torHealthy;
         firewall.enforceDropAll(!compliant);
+        sendBroadcast(new Intent("com.helix.netprivacy.PATH_CHANGED"));
     }
 
     private void hydrateBlocklists() {
         try {
-            blocklists.fetchAndVerify(BlocklistManager.DEFAULT_SOURCE, ""); // TODO: expected hash + signature
+            BlocklistConfig.Source src = blocklistConfig.load();
+            blocklists.fetchAndVerify(src.url, src.expectedHash);
         } catch (Exception e) {
             Log.w(TAG, "Blocklist fetch failed", e);
         }

@@ -20,9 +20,11 @@ final class PolicyClient {
         try {
             ensure();
             if (policy == null) return defaultMode;
-            // TODO: extend DomainState with explicit egress mode once policy is implemented.
-            // For now, derive simple defaults: secure -> TOR, others -> VPN.
-            return domainId == Domains.SECURE ? EgressModes.TOR : EgressModes.VPN;
+            DomainState state = policy.getDomainState(domainId);
+            if (state != null && state.egressMode >= 0) {
+                return state.egressMode;
+            }
+            return defaultMode;
         } catch (Exception e) {
             Log.w(TAG, "Policy query failed, defaulting", e);
             return defaultMode;

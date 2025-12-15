@@ -17,8 +17,8 @@ import java.util.Objects;
  */
 final class BlocklistManager {
     static final String DEFAULT_SOURCE = "https://blocklists.example/helix-dns.txt";
-    // Replace with real pinned key.
-    private static final String PINNED_PUBKEY_B64 = "REPLACE_WITH_BASE64_X509_PUBKEY";
+    // Test pinned key (RSA 2048, example only; replace with production key)
+    private static final String PINNED_PUBKEY_B64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwMl4ZQ16tGRzVru5vZm5Xxn9jQgd6DmxhPxH4X8lN4mA5c8pr3ycXd7GuFAH4vODTDwWEOvVYpUfZyI0OrJD4F5LwWNNPdLZ1omFfco37p44nr7g4g1p1yk2Vkydf4WvF5A8lC0F6nCWhw1OlP5zjz3lpoDNyfS+mUOVMRWAc6gEoYJXg+1ts8y9x8gRJgvP34X1dMrOYvC9SKeqGJQtl0SP/FBxEM86YqX6qfJ4QVeQ2mKpY+2KPMLZ+UE7XrWQiUJnZ7rKVzIE7KxJ2O7aA6MZmRrOkeUxq13zsAN5mKDzdwJ7ClGa5VhqNg+XppDngbnhkwIDAQAB";
     private static final String CACHE_PATH = "/data/misc/helix/blocklists/helix-dns.txt";
 
     String currentVersionHash = "";

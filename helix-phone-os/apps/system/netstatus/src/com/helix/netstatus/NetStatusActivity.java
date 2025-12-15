@@ -1,9 +1,11 @@
 package com.helix.netstatus;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,15 +22,16 @@ import com.helix.netprivacy.INetPrivacy;
  */
 public class NetStatusActivity extends Activity {
     private INetPrivacy netPrivacy;
-    private TextView statusView;
+    private TextView statusPersonal;
+    private TextView statusBusiness;
+    private TextView statusSecure;
     private TextView blocklistView;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
-    private final Runnable poll = new Runnable() {
+    private final BroadcastReceiver updates = new BroadcastReceiver() {
         @Override
-        public void run() {
+        public void onReceive(Context context, Intent intent) {
             updateUi();
-            handler.postDelayed(this, 5_000);
         }
     };
 
@@ -52,9 +55,13 @@ public class NetStatusActivity extends Activity {
         layout.setOrientation(LinearLayout.VERTICAL);
         int pad = dp(16);
         layout.setPadding(pad, pad, pad, pad);
-        statusView = new TextView(this);
+        statusPersonal = new TextView(this);
+        statusBusiness = new TextView(this);
+        statusSecure = new TextView(this);
         blocklistView = new TextView(this);
-        layout.addView(statusView);
+        layout.addView(statusPersonal);
+        layout.addView(statusBusiness);
+        layout.addView(statusSecure);
         layout.addView(blocklistView);
         setContentView(layout);
     }
@@ -65,30 +72,40 @@ public class NetStatusActivity extends Activity {
         Intent svc = new Intent();
         svc.setClassName("com.helix.netprivacy", "com.helix.netprivacy.NetPrivacyService");
         bindService(svc, conn, Context.BIND_AUTO_CREATE);
-        handler.post(poll);
+        registerReceiver(updates, new IntentFilter("com.helix.netprivacy.PATH_CHANGED"));
+        handler.post(this::updateUi);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        handler.removeCallbacks(poll);
+        handler.removeCallbacksAndMessages(null);
+        unregisterReceiver(updates);
         unbindService(conn);
     }
 
     private void updateUi() {
         if (netPrivacy == null) {
-            statusView.setText("Net privacy service not connected");
+            statusPersonal.setText("Net privacy service not connected");
+            statusBusiness.setText("");
+            statusSecure.setText("");
             blocklistView.setText("");
             return;
         }
         try {
-            EgressMode mode = netPrivacy.getDomainEgressMode(0); // domain 0 as placeholder
-            String modeStr = mode.mode == 2 ? "Tor" : mode.mode == 1 ? "VPN" : "Direct";
-            statusView.setText("Domain 0 egress: " + modeStr + " (" + mode.reason + ")");
+            setStatus(statusPersonal, 0, "Personal");
+            setStatus(statusBusiness, 1, "Business");
+            setStatus(statusSecure, 2, "Secure");
             blocklistView.setText("Blocklist: " + netPrivacy.getBlocklistVersion());
         } catch (Exception e) {
-            statusView.setText("Error reading status: " + e.getMessage());
+            statusPersonal.setText("Error reading status: " + e.getMessage());
         }
+    }
+
+    private void setStatus(TextView view, int domain, String label) throws Exception {
+        EgressMode mode = netPrivacy.getDomainEgressMode(domain);
+        String modeStr = mode.mode == 2 ? "Tor" : mode.mode == 1 ? "VPN" : "Direct";
+        view.setText(label + " egress: " + modeStr + " (" + mode.reason + ")");
     }
 
     private int dp(int v) {

@@ -3,7 +3,7 @@
     {
       "name": "helix-default",
       "url": "https://blocklists.example/helix-dns.txt",
-      "expected_hash": "REPLACE_WITH_SHA256"
+      "expected_hash": "c0ffee1234567890deadbeefc0ffee1234567890deadbeefc0ffee1234567890"
     }
   ]
 }

@@ -6,4 +6,5 @@ parcelable DomainState {
   String policyVersion;  // applied policy version
   String[] allowedApps;  // package names permitted in this domain
   boolean networkAllowed;
+  int egressMode;        // 0=Direct,1=VPN,2=Tor
 }
