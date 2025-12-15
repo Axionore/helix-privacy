@@ -23,7 +23,7 @@ final class BlocklistManager {
 
     String currentVersionHash = "";
 
-    String fetchAndVerify(String sourceUrl, String expectedHash) throws Exception {
+    String fetchAndVerify(String sourceUrl, String expectedHash, String signatureB64) throws Exception {
         Objects.requireNonNull(sourceUrl, "sourceUrl");
         URL url = new URL(sourceUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -41,10 +41,12 @@ final class BlocklistManager {
         if (!expectedHash.isEmpty() && !hash.equalsIgnoreCase(expectedHash)) {
             throw new SecurityException("Blocklist hash mismatch");
         }
-        // Optional: verify signature if provided (stubbed).
-        // verifySignature(data, signatureBytes);
+        if (!signatureB64.isEmpty() && !verifySignature(data, Base64.getDecoder().decode(signatureB64))) {
+            throw new SecurityException("Blocklist signature verification failed");
+        }
         currentVersionHash = hash;
         persist(data);
+        applyFilters();
         return hash;
     }
 
@@ -67,6 +69,11 @@ final class BlocklistManager {
             // Best effort persistence; log and continue.
             android.util.Log.w("HelixBlocklist", "Persist blocklist failed", e);
         }
+    }
+
+    private void applyFilters() {
+        // TODO: hook into DNS/HTTP filtering layer using the cached blocklist.
+        android.util.Log.i("HelixBlocklist", "Applying DNS/HTTP filters from cache (stub)");
     }
 
     private static String sha256Hex(byte[] data) throws Exception {

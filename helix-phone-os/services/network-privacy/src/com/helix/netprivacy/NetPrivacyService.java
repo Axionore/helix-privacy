@@ -77,7 +77,7 @@ public class NetPrivacyService extends Service {
     private void hydrateBlocklists() {
         try {
             BlocklistConfig.Source src = blocklistConfig.load();
-            blocklists.fetchAndVerify(src.url, src.expectedHash);
+            blocklists.fetchAndVerify(src.url, src.expectedHash, src.signatureB64);
         } catch (Exception e) {
             Log.w(TAG, "Blocklist fetch failed", e);
         }

@@ -11,6 +11,8 @@ final class FirewallEnforcer {
 
     void enforceDropAll(boolean enable) {
         // TODO: apply iptables/ebpf rules to drop all egress until VPN/Tor is healthy.
+        // Example command to add drop rule: iptables -I OUTPUT -j DROP
+        // Example to remove rule: iptables -D OUTPUT -j DROP
         Log.i(TAG, "Fail-closed firewall " + (enable ? "enabled" : "disabled") + " (stub)");
     }
 }

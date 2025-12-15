@@ -11,6 +11,11 @@ final class TorController {
     boolean ensure() {
         // TODO: start/monitor Tor daemon for secure domain routing.
         Log.i(TAG, "Ensuring Tor daemon (stub)");
-        return false; // default to false until implemented
+        return checkHealth();
+    }
+
+    private boolean checkHealth() {
+        // TODO: query actual Tor process/bootstrap state.
+        return false;
     }
 }

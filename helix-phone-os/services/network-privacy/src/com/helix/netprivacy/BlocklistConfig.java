@@ -19,11 +19,13 @@ final class BlocklistConfig {
         final String name;
         final String url;
         final String expectedHash;
+        final String signatureB64;
 
-        Source(String name, String url, String expectedHash) {
+        Source(String name, String url, String expectedHash, String signatureB64) {
             this.name = name;
             this.url = url;
             this.expectedHash = expectedHash;
+            this.signatureB64 = signatureB64;
         }
     }
 
@@ -37,11 +39,12 @@ final class BlocklistConfig {
             return new Source(
                     s.optString("name", "default"),
                     s.getString("url"),
-                    s.optString("expected_hash", "")
+                    s.optString("expected_hash", ""),
+                    s.optString("signature_b64", "")
             );
         } catch (Exception e) {
             Log.w(TAG, "Failed to load blocklist config, using defaults", e);
-            return new Source("default", BlocklistManager.DEFAULT_SOURCE, "");
+            return new Source("default", BlocklistManager.DEFAULT_SOURCE, "", "");
         }
     }
 }
